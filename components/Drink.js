@@ -1,12 +1,20 @@
 import Link from 'next/link'
 import supabase from '../config/supabaseClient'
 
-const Drink = ({ drink }) => {
+const Drink = ({ drink, setDrinkData }) => {
   const deleteHandler = async () => {
     const { data, error } = await supabase
       .from('drinks')
       .delete()
       .match({ id: drink.id })
+    if (error) {
+      alert('Something went wrong')
+      return
+    }
+    if (data) {
+      setDrinkData((prev) => prev.filter((d) => d.id !== drink.id))
+      alert('Deleted successfully')
+    }
   }
   return (
     <div className='p-3 border rounded-lg flex flex-col justify-between'>

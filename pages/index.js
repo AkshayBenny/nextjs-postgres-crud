@@ -1,7 +1,9 @@
 import Drink from '../components/Drink'
 import supabase from '../config/supabaseClient'
 import Link from 'next/link'
+import { useState } from 'react'
 export default function Home({ drinks, error }) {
+  const [drinkData, setDrinkData] = useState(drinks)
   if (error) {
     alert('Something went wrong')
   }
@@ -21,9 +23,10 @@ export default function Home({ drinks, error }) {
       </div>
       <div className='grid px-6 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-12'>
         {drinks &&
-          drinks?.map((drink, index) => {
-            console.log(drink)
-            return <Drink key={index} drink={drink} />
+          drinkData?.map((drink, index) => {
+            return (
+              <Drink key={index} drink={drink} setDrinkData={setDrinkData} />
+            )
           })}
       </div>
     </>
@@ -37,5 +40,6 @@ export async function getStaticProps() {
       drinks: data,
       error: error,
     },
+    revalidate: 1,
   }
 }
